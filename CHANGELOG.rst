@@ -2,8 +2,8 @@
 Changelog for package whycon
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.2 (2015-10-12)
+------------------
 * visualization
 * some service or whatever package
 * angles package
