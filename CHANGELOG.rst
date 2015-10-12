@@ -2,6 +2,13 @@
 Changelog for package whycon
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#2 <https://github.com/LCAS/whycon/issues/2>`_ from LCAS/marc-hanheide-patch-1
+  added missing install targets
+* added missing install targets
+* Contributors: Marc Hanheide
+
 1.2.2 (2015-10-12)
 ------------------
 * visualization
