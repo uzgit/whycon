@@ -2,6 +2,16 @@
 Changelog for package whycon
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* visualization
+* some service or whatever package
+* angles package
+* tf added
+* Image geometry added
+* Camera info package
+* Contributors: Tom Krajnik
+
 1.2.1 (2015-10-12)
 ------------------
 * fixed email
