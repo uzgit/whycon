@@ -2,8 +2,8 @@
 Changelog for package whycon
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.4 (2015-11-02)
+------------------
 * Merge pull request `#3 <https://github.com/LCAS/whycon/issues/3>`_ from Jailander/master
   adding target_frame parameter
 * adding target_frame parameter
