@@ -1,6 +1,9 @@
 #include <camera_info_manager/camera_info_manager.h>
 #include <sensor_msgs/CameraInfo.h>
 #include <tf/tf.h>
+
+#include <iostream>
+
 #include <sstream>
 #include <geometry_msgs/PoseArray.h>
 #include <visualization_msgs/Marker.h>
@@ -10,6 +13,8 @@
 whycon::WhyConROS::WhyConROS(ros::NodeHandle& n) : is_tracking(false), should_reset(true), it(n)
 {
   if (!n.getParam("targets", targets)) throw std::runtime_error("Private parameter \"targets\" is missing");
+
+  n.param<std::string>("target_frame", target_frame, "/base_link");
 
   n.param("axis", axis_file, std::string());
   n.param("outer_diameter", outer_diameter, WHYCON_DEFAULT_OUTER_DIAMETER);
@@ -89,7 +94,8 @@ void whycon::WhyConROS::publish_results(const std_msgs::Header& header, const cv
   if (publish_viz)
   {
     marker.header = header;
-    marker.header.frame_id = "/base_link";
+    //marker.header.frame_id = "/base_link";
+    marker.header.frame_id = target_frame;
 
     marker.type = visualization_msgs::Marker::POINTS;
     marker.action = visualization_msgs::Marker::ADD;
@@ -140,7 +146,7 @@ void whycon::WhyConROS::publish_results(const std_msgs::Header& header, const cv
       geometry_msgs::Point marker_point;
       marker_point.x = coord(0);
       marker_point.y = coord(1);
-      marker_point.z = coord(2);  
+      marker_point.z = coord(2);
       marker.points.push_back(marker_point);
       if (system->axis_set) {
         marker_point.x = coord_trans(0);
@@ -190,19 +196,22 @@ void whycon::WhyConROS::publish_results(const std_msgs::Header& header, const cv
 
   if (publish_poses) {
     pose_array.header = header;
-    pose_array.header.frame_id = "/base_link";
+    //pose_array.header.frame_id = "/base_link";
+    pose_array.header.frame_id = target_frame;
     poses_pub.publish(pose_array);
   }
 
   if (publish_trans_poses) {
     trans_pose_array.header = header;
-    trans_pose_array.header.frame_id = "/base_link";
+    //trans_pose_array.header.frame_id = "/base_link";
+    trans_pose_array.header.frame_id = target_frame;
     trans_poses_pub.publish(trans_pose_array);
   }
 
   if (publish_points) {
     point_array.header = header;
-    point_array.header.frame_id = "/base_link";
+    //point_array.header.frame_id = "/base_link";
+    point_array.header.frame_id = target_frame;
     points_pub.publish(point_array);
   }
 }
