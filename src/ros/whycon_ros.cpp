@@ -9,9 +9,12 @@
 #include <visualization_msgs/Marker.h>
 #include "whycon_ros.h"
 #include "whycon/PointArray.h"
+#include "whycon/Tracker.h"
+#include "whycon/TrackerArray.h"
 
 whycon::WhyConROS::WhyConROS(ros::NodeHandle& n) : is_tracking(false), should_reset(true), it(n)
 {
+  node_name = ros::this_node::getName();
   if (!n.getParam("targets", targets)) throw std::runtime_error("Private parameter \"targets\" is missing");
 
   n.param<std::string>("target_frame", target_frame, "/base_link");
@@ -27,7 +30,9 @@ whycon::WhyConROS::WhyConROS(ros::NodeHandle& n) : is_tracking(false), should_re
   /* initialize ros */
   int input_queue_size = 1;
   n.param("input_queue_size", input_queue_size, input_queue_size);
-  cam_sub = it.subscribeCamera("/camera/image_rect_color", input_queue_size, boost::bind(&WhyConROS::on_image, this, _1, _2));
+
+  cameraInfo = n.subscribe("/camera/camera_info", 1, &WhyConROS::camera_info_update, this);
+  cam_sub = it.subscribe("/camera/image_rect_color", input_queue_size, &WhyConROS::on_image, this);
   
   image_pub = n.advertise<sensor_msgs::Image>("image_out", 1);
   viz_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
@@ -35,13 +40,19 @@ whycon::WhyConROS::WhyConROS(ros::NodeHandle& n) : is_tracking(false), should_re
   poses_pub = n.advertise<geometry_msgs::PoseArray>("poses", 1);
   trans_poses_pub = n.advertise<geometry_msgs::PoseArray>("trans_poses", 1);
   context_pub = n.advertise<sensor_msgs::Image>("context", 1);
+  tracks_pub = n.advertise<whycon::TrackerArray >(node_name + "tracks", 1);
 
   reset_service = n.advertiseService("reset", &WhyConROS::reset, this);
 }
 
-void whycon::WhyConROS::on_image(const sensor_msgs::ImageConstPtr& image_msg, const sensor_msgs::CameraInfoConstPtr& info_msg)
+void whycon::WhyConROS::camera_info_update(const sensor_msgs::CameraInfoConstPtr& info_msg) {
+    camera_model.fromCameraInfo(info_msg);
+}
+
+
+void whycon::WhyConROS::on_image(const sensor_msgs::ImageConstPtr& image_msg)
 {
-  camera_model.fromCameraInfo(info_msg);
+
   if (camera_model.fullResolution().width == 0) { ROS_ERROR_STREAM("camera is not calibrated!"); return; }
 
   cv_bridge::CvImageConstPtr cv_ptr = cv_bridge::toCvShare(image_msg, "rgb8");
@@ -79,6 +90,14 @@ bool whycon::WhyConROS::reset(std_srvs::Empty::Request& request, std_srvs::Empty
   return true;
 }
 
+int whycon::WhyConROS::convert_to_uuid(std::string to_convert) {
+  int to_return = 0;
+  for(char i : to_convert){
+    to_return+=int(i);
+  }
+  return to_return;
+}
+
 void whycon::WhyConROS::publish_results(const std_msgs::Header& header, const cv_bridge::CvImageConstPtr& cv_ptr)
 {
   bool publish_images = (image_pub.getNumSubscribers() != 0);
@@ -86,8 +105,9 @@ void whycon::WhyConROS::publish_results(const std_msgs::Header& header, const cv
   bool publish_points = (points_pub.getNumSubscribers() != 0);
   bool publish_poses = (poses_pub.getNumSubscribers() != 0);
   bool publish_trans_poses = (trans_poses_pub.getNumSubscribers() != 0);
+  bool publish_tracks = (tracks_pub.getNumSubscribers() != 0);
   
-  if (!publish_images && !publish_viz && !publish_points && !publish_poses && !publish_trans_poses) return;
+  if (!publish_images && !publish_viz && !publish_points && !publish_poses && !publish_trans_poses && !publish_tracks) return;
   
   // prepare particle markers
   visualization_msgs::Marker marker, transformed_marker;
@@ -108,7 +128,7 @@ void whycon::WhyConROS::publish_results(const std_msgs::Header& header, const cv
 
     marker.ns = "points";
     marker.ns = "poses";
-    
+
     marker.color.r = 1;
     marker.color.g = 0;
     marker.color.b = 0;
@@ -125,6 +145,7 @@ void whycon::WhyConROS::publish_results(const std_msgs::Header& header, const cv
 
   geometry_msgs::PoseArray pose_array, trans_pose_array;
   whycon::PointArray point_array;
+  whycon::TrackerArray track_array;
   
   // go through detected targets
   for (int i = 0; i < system->targets; i++) {
@@ -133,6 +154,21 @@ void whycon::WhyConROS::publish_results(const std_msgs::Header& header, const cv
     cv::LocalizationSystem::Pose trans_pose = system->get_transformed_pose(circle);
     cv::Vec3f coord = pose.pos;    
     cv::Vec3f coord_trans = trans_pose.pos;
+
+    // publish track info in a single msg
+    if(publish_tracks) {
+      whycon::Tracker track_to_add;
+      track_to_add.uuid = node_name + std::to_string(i);
+      track_to_add.pose.position.x = trans_pose.pos(0);
+      track_to_add.pose.position.y = trans_pose.pos(1);
+      track_to_add.pose.position.z = trans_pose.pos(2);
+      track_to_add.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw(trans_pose.rot(0), trans_pose.rot(1), trans_pose.rot(2));
+      track_to_add.point.x = circle.x;
+      track_to_add.point.y = circle.y;
+      track_to_add.roundness = circle.roundness;
+      track_to_add.bwratio = circle.bwRatio;
+
+    }
 
     // draw each target
     if (publish_images) {
@@ -214,6 +250,7 @@ void whycon::WhyConROS::publish_results(const std_msgs::Header& header, const cv
     point_array.header.frame_id = target_frame;
     points_pub.publish(point_array);
   }
+
 }
 
 
