@@ -15,6 +15,7 @@
 whycon::WhyConROS::WhyConROS(ros::NodeHandle& n) : is_tracking(false), should_reset(true), it(n)
 {
   node_name = ros::this_node::getName();
+  if (node_name[0] == '/') node_name.erase (node_name.begin());
   if (!n.getParam("targets", targets)) throw std::runtime_error("Private parameter \"targets\" is missing");
 
   n.param<std::string>("target_frame", target_frame, "/base_link");
@@ -40,7 +41,7 @@ whycon::WhyConROS::WhyConROS(ros::NodeHandle& n) : is_tracking(false), should_re
   poses_pub = n.advertise<geometry_msgs::PoseArray>("poses", 1);
   trans_poses_pub = n.advertise<geometry_msgs::PoseArray>("trans_poses", 1);
   context_pub = n.advertise<sensor_msgs::Image>("context", 1);
-  tracks_pub = n.advertise<whycon::TrackerArray >(node_name + "tracks", 1);
+  tracks_pub = n.advertise<whycon::TrackerArray >("tracks", 1);
 
   reset_service = n.advertiseService("reset", &WhyConROS::reset, this);
 }
@@ -151,7 +152,7 @@ void whycon::WhyConROS::publish_results(const std_msgs::Header& header, const cv
 	    // publish track info in a single msg
 	    if(publish_tracks) {
 		    whycon::Tracker track_to_add;
-		    track_to_add.uuid = node_name + std::to_string(i);
+		    track_to_add.uuid = node_name + "_" +std::to_string(i);
 		    track_to_add.pose.position.x = trans_pose.pos(0);
 		    track_to_add.pose.position.y = trans_pose.pos(1);
 		    track_to_add.pose.position.z = trans_pose.pos(2);
