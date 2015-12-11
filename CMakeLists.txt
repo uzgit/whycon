@@ -35,10 +35,15 @@ if(NOT DISABLE_ROS)
   add_message_files(
     FILES
     PointArray.msg
+    Tracker.msg
+    TrackerArray.msg
   )
 
   generate_messages(
-    DEPENDENCIES geometry_msgs
+    DEPENDENCIES 
+    geometry_msgs
+    std_msgs
+    whycon
   )
 
   catkin_package(

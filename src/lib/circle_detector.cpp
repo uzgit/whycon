@@ -252,12 +252,13 @@ cv::CircleDetector::Circle cv::CircleDetector::detect(const cv::Mat& image, bool
   vector<int>& queue = context->queue;
 
 	int pos = (height-1)*width;
-  int ii = 0;
+	int ii = 0;
 	int start = 0;
   Circle inner, outer;
 
 	bool search_in_window = false;
-	int local_x, local_y;
+	int local_x = -1;
+	int local_y = -1;
 	if (previous_circle.valid){
 		WHYCON_DEBUG("starting with previously valid circle at " << previous_circle.x << "," << previous_circle.y);
 		ii = ((int)previous_circle.y)*width+(int)previous_circle.x;

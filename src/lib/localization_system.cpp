@@ -8,9 +8,6 @@
 #include <limits>
 #include <whycon/circle_detector.h>
 #include <whycon/localization_system.h>
-using std::cout;
-using std::endl;
-using std::numeric_limits;
 
 cv::LocalizationSystem::LocalizationSystem(int _targets, int _width, int _height, const cv::Mat& _K, const cv::Mat& _dist_coeff, 
   float _outer_diameter, float _inner_diameter) :
@@ -31,7 +28,7 @@ cv::LocalizationSystem::LocalizationSystem(int _targets, int _width, int _height
   coordinates_transform = cv::Matx33f(1, 0, 0, 0, 1, 0, 0, 0, 1);
   precompute_undistort_map();
 
-  cout.precision(30);
+  std::cout.precision(30);
 }
 
 bool cv::LocalizationSystem::localize(const cv::Mat& image, bool reset, int attempts, int max_refine) {
@@ -159,13 +156,13 @@ bool cv::LocalizationSystem::set_axis(const cv::Mat& image, int max_attempts, in
   cv::Vec3f vecs[3];  
   for (int i = 0; i < 3; i++) {
     vecs[i] = circle_poses[i + 1].pos - circle_poses[0].pos;
-    cout << "vec " << i+1 << "->0 " << vecs[i] << endl;
+    std::cout << "vec " << i+1 << "->0 " << vecs[i] << std::endl;
   }
   int min_prod_i = 0;
-  float min_prod = numeric_limits<float>::max();
+  float min_prod = std::numeric_limits<float>::max();
   for (int i = 0; i < 3; i++) {
     float prod = fabsf(vecs[(i + 2) % 3].dot(vecs[i]));
-    cout << "prod: " << ((i + 2) % 3 + 1) << " " << i + 1 << " " << vecs[(i + 2) % 3] << " " << vecs[i] << " " << prod << endl;
+    std::cout << "prod: " << ((i + 2) % 3 + 1) << " " << i + 1 << " " << vecs[(i + 2) % 3] << " " << vecs[i] << " " << prod << std::endl;
     if (prod < min_prod) { min_prod = prod; min_prod_i = i; }
   }
   int axis1_i = (((min_prod_i + 2) % 3) + 1);
@@ -173,7 +170,7 @@ bool cv::LocalizationSystem::set_axis(const cv::Mat& image, int max_attempts, in
   if (fabsf(circle_poses[axis1_i].pos(0)) < fabsf(circle_poses[axis2_i].pos(0))) std::swap(axis1_i, axis2_i);
   int xy_i = 0;
   for (int i = 1; i <= 3; i++) if (i != axis1_i && i != axis2_i) { xy_i = i; break; }
-  cout << "axis ids: " << axis1_i << " " << axis2_i << " " << xy_i << endl;
+  std::cout << "axis ids: " << axis1_i << " " << axis2_i << " " << xy_i << std::endl;
 
   CircleDetector::Circle origin_circles_reordered[4];
   origin_circles_reordered[0] = origin_circles[0];
@@ -183,7 +180,7 @@ bool cv::LocalizationSystem::set_axis(const cv::Mat& image, int max_attempts, in
   for (int i = 0; i < 4; i++) {
     origin_circles[i] = origin_circles_reordered[i];
     circle_poses[i] = get_pose(origin_circles[i]);
-    cout << "original poses: " << circle_poses[i].pos << endl;
+    std::cout << "original poses: " << circle_poses[i].pos << std::endl;
   }
     
   float dim_x = 1.0;
@@ -208,14 +205,14 @@ bool cv::LocalizationSystem::set_axis(const cv::Mat& image, int max_attempts, in
   cv::solve(A, b, x);
   x.push_back(1.0);
   coordinates_transform = x.reshape(1, 3);
-  cout << "H " << coordinates_transform << endl;
+  std::cout << "H " << coordinates_transform << std::endl;
 
   // TODO: compare H obtained by OpenCV with the hand approach
   std::vector<cv::Vec2f> src(4), dsts(4);
   for (int i = 0; i < 4; i++) {
     src[i] = tmp[i];
     dsts[i] = targets[i];
-    cout << tmp[i] << " -> " << targets[i] << endl;
+    std::cout << tmp[i] << " -> " << targets[i] << std::endl;
   }
 
   /*cv::Matx33f H = cv::findHomography(src, dsts, CV_LMEDS);
