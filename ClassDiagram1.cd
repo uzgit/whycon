@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="WhyConID.CNecklace" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAEAAAAAAAAABAAEAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CNecklace.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.CTransformation">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Delegate Name="WhyConID.CTransformation.QSortCompareFunction&lt;T&gt;" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>CTransformation.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>S4gQkAABiEERAAxwQAAgghAd4UqEgAAAAMRA0iAAFAE=</HashCode>
+      <FileName>CTransformation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.QSort&lt;T&gt;" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAABQAAAAAAAIAAAAAA=</HashCode>
+      <FileName>CTransformation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.Form1" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>DGXwlIAVMyigEkC0X6WACqQSykgweAIQAxQWEFgiEEE=</HashCode>
+      <FileName>Form1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.Form2" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQEDAIAAiCiACASBAQDMBgIKAAAPggFAJCAggAAhCkA=</HashCode>
+      <FileName>Form2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.Program" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.Properties.Resources" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.Properties.Settings" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.CCircleDetect">
+    <Position X="8" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="WhyConID.CCircleDetect.SSegment">
+        <Compartments>
+          <Compartment Name="Fields" Collapsed="true" />
+        </Compartments>
+        <TypeIdentifier>
+          <NewMemberFileName>CCircleDetect.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>QdICEqkAoRlAgAxCeQPgABAiAQiAmChViIBkDAAChwQ=</HashCode>
+      <FileName>CCircleDetect.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="WhyConID.STrackedObject" Collapsed="true">
+    <Position X="2.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIABAQAAgAAAAAEAAAAgAAAAAEgEAABgAQAAAAA=</HashCode>
+      <FileName>CTransformation.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="WhyConID.S3DTransform" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>CTransformation.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="WhyConID.ETransformType" Collapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAQAAEAAAAAiAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>CTransformation.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>

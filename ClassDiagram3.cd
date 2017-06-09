@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="WhyConID.CCircleDetect" Collapsed="true">
+    <Position X="8.5" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AdICEqkAoRhAgAxAegKgABAiAQiAGChViIAECAAABwQ=</HashCode>
+      <FileName>CCircleDetect.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.GlobalData" Collapsed="true">
+    <Position X="5.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAAAAAABAAAAAAAAAAAIAAABAAAAACAA=</HashCode>
+      <FileName>CCircleDetect.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.CNecklace" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAEAAAAAAAAABAAEAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CNecklace.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.CosPhi" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ANICEoEAoQhAgARAaAOgABACAQiAGChFCIBkCAAAAgQ=</HashCode>
+      <FileName>CosPhi.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.CTransformation" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>SYgQkAABiEERAAxwQAAgggAd4UqEgAAAAMRA0iAAFAE=</HashCode>
+      <FileName>CTransformation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.QSort&lt;T&gt;" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAABQAAAAAAAIAAAAAA=</HashCode>
+      <FileName>CTransformation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.Form1" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>fi2wlKALciGoMMAqX4WgEqYSykhQ7CMAhzQWHGkiMEE=</HashCode>
+      <FileName>Form1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.Form2" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQEDAIAAiCiACASFAQDMBgIKAAAHggFAJCAggAAhCkA=</HashCode>
+      <FileName>Form2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.Form3" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAACAAAACAAAAgAAAQAAAAAABAAA=</HashCode>
+      <FileName>Form3.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.Program" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.Properties.Resources" Collapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WhyConID.Properties.Settings" Collapsed="true">
+    <Position X="5.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="WhyConID.SSegment" Collapsed="true">
+    <Position X="5.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MAAAAMAwAAAAgAAAAIAAAAAAAhQBAAgAIgJwAABAAAQ=</HashCode>
+      <FileName>CCircleDetect.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="WhyConID.SNecklace" Collapsed="true">
+    <Position X="4" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>CNecklace.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="WhyConID.CosSegment" Collapsed="true">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MAAAAMAwAAAAgAAAAIAAAAAAAhQBAAgAIgJwAABAAAQ=</HashCode>
+      <FileName>CosPhi.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="WhyConID.STrackedObject" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIABAQAAgAAAAAEAAAAgAAAAAEgEAABgAQAAAAA=</HashCode>
+      <FileName>CTransformation.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="WhyConID.S3DTransform" Collapsed="true">
+    <Position X="2.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>CTransformation.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="WhyConID.ETransformType" Collapsed="true">
+    <Position X="0.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAQAAEAAAAAiAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>CTransformation.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>
