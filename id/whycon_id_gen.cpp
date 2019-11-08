@@ -262,10 +262,14 @@ int main(int argc, char *argv[])
                 display_help();
                 return 0;
             case 'd':
-                if(isdigit(optarg[0])) hamming = atoi(optarg);
-                else fprintf(stderr, "Invalid Hamming distance.\n");
-                display_help();
-                return 1;
+                if(isdigit(optarg[0])) {
+                    hamming = atoi(optarg);
+                }
+                else {
+                    fprintf(stderr, "Invalid Hamming distance.\n");
+                    display_help();
+                    return 1;
+                }
                 break;
             case 'v':
                 verbose = true;

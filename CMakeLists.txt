@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(whycon_ros)
+include(FindPkgConfig)
 
 find_package(catkin REQUIRED COMPONENTS
     image_transport
@@ -11,6 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
     cv_bridge
     tf
     )
+
+pkg_check_modules(Magick REQUIRED Magick++)
 
 find_package(OpenCV REQUIRED)
 
@@ -69,6 +72,7 @@ catkin_package(
 
 include_directories(include
     ${catkin_INCLUDE_DIRS}
+    ${Magick_INCLUDE_DIRS}
     )
 
 add_library(whycon_detector src/CCircleDetect.cpp)
@@ -99,6 +103,19 @@ target_link_libraries(whycon_gui
     SDL
     SDL_ttf
     )
+
+add_executable(whycon_id_generator 
+    id/CNecklace.cpp
+    id/whycon_id_gen.cpp)
+add_dependencies(whycon_id_generator
+    ${catkin_EXPORTED_TARGETS}
+    ${${PROJECT_NAME}_EXPORTED_TARGETS}
+    )
+
+target_link_libraries(whycon_id_generator
+    ${Magick_LIBRARIES}
+)
+
 
 add_executable(whycon_ros src/CWhycon.cpp)
 
@@ -133,6 +150,7 @@ install(TARGETS
     whycon_necklace
     whycon_gui
     whycon_ros
+    whycon_id_generator
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
