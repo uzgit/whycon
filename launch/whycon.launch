@@ -1,24 +1,31 @@
 <?xml version="1.0"?>
 <launch>
-  
-  <node pkg="whycon" type="whycon" name="whycon_right" respawn="true" output="screen">
-  <param name="targets" value="1" type="int"/>
-  <param name="outer_diameter" value="0.03" type="double"/>
-  <param name="inner_diameter" value="0.01" type="double"/>
-  <param name="target_frame" value="right_hand_camera"/>
-  <remap from="/camera/image_rect_color" to="/cameras/right_hand_camera/image"/>
-  <remap from="/camera/camera_info" to="/cameras/right_hand_camera/camera_info"/>
-  </node>
-  
-  <node pkg="whycon" type="whycon" name="whycon_left" respawn="true" output="screen">
-  <param name="targets" value="1" type="int"/>
-  <param name="outer_diameter" value="0.03" type="double"/>
-  <param name="inner_diameter" value="0.01" type="double"/>
-  <param name="target_frame" value="left_hand_camera"/>
-  <remap from="/camera/image_rect_color" to="/cameras/left_hand_camera/image"/>
-  <remap from="/camera/camera_info" to="/cameras/left_hand_camera/camera_info"/>
-  </node>
 
-  <!--<node pkg="zoidbot_tools" type="whycon_transform.py" name="whycon_transform" respawn="true" output="screen"/>-->
-  
+    <node pkg="rqt_reconfigure" type="rqt_reconfigure" name="reconfigurator"/>
+
+    <arg name="camInfo" default="/depth/camera_info" doc="camera_info topic"/>
+    <arg name="camRaw" default="/depth/image_raw" doc="image_raw topic"/>
+
+    <arg name="idBits" default="5" doc="Number of encoded bits"/>
+    <arg name="idSamples" default="360" doc="Number of samples to detect ID"/>
+    <arg name="hammingDist" default="1" doc="Hamming distance used for ID"/>
+    <arg name="maxMarkers" default="100" doc="Maximum possible amount of markers to be tracked"/>
+    <arg name="useGui" default="true" doc="Whether to use GUI"/>
+
+    <arg name="fontPath" value="$(find whycon_ros)/etc/font.ttf"/>
+    <arg name="calibDefPath" value="$(find whycon_ros)/etc/default.cal"/>
+
+    <node pkg="whycon_ros" type="whycon_ros" name="whycon_ros" output="screen" args="$(arg fontPath) $(arg calibDefPath)" launch-prefix="">
+
+        <remap from="/camera/camera_info" to="$(arg camInfo)"/>
+        <remap from="/camera/image_raw" to="$(arg camRaw)"/>
+
+        <param name="useGui" value="$(arg useGui)"/>
+        <param name="idBits" value="$(arg idBits)"/>
+        <param name="idSamples" value="$(arg idSamples)"/>
+        <param name="hammingDist" value="$(arg hammingDist)"/>
+        <param name="maxMarkers" value="$(arg maxMarkers)"/>
+
+    </node>
+
 </launch>

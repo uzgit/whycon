@@ -1,113 +1,170 @@
-cmake_minimum_required(VERSION 2.8)
-project(whycon)
+cmake_minimum_required(VERSION 2.8.3)
+project(whycon_ros)
 
-# set some flags
-add_definitions(-std=c++11)
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O4 -march=native -Wfatal-errors")
-#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O0 -g -Wfatal-errors")
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake-configs")
-
-# set some options
-option(DISABLE_ROS "Do not build for ROS, but as standalone code" OFF)
-option(ENABLE_FULL_UNDISTORT "Undistort the whole frame" OFF)
-option(ENABLE_RANDOMIZED_THRESHOLD "Use rand() instead of binary-like search for threshold" OFF)
-option(ENABLE_VERBOSE "Enable verbose console messages during detection" OFF)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_SOURCE_DIR}/include/whycon/config.h)
-
-#### ROS CONFIGURATION ####
-if(NOT DISABLE_ROS)
-  find_package(catkin REQUIRED COMPONENTS
-    cv_bridge
-    roscpp
-    sensor_msgs
-    std_msgs
-    camera_info_manager
-    message_generation
-    geometry_msgs
-    message_filters
-    image_geometry
+find_package(catkin REQUIRED COMPONENTS
     image_transport
-    angles
-    visualization_msgs
-    tf
-  )
-
-  add_message_files(
-    FILES
-    PointArray.msg
-    Tracker.msg
-    TrackerArray.msg
-  )
-
-  generate_messages(
-    DEPENDENCIES 
-    geometry_msgs
+    roscpp
     std_msgs
-    whycon
-  )
+    geometry_msgs
+    message_generation
+    dynamic_reconfigure
+    cv_bridge
+    tf
+    )
 
-  catkin_package(
-    INCLUDE_DIRS include
-    LIBRARIES whycon
-    CATKIN_DEPENDS cv_bridge roscpp sensor_msgs std_msgs message_runtime
-    DEPENDS whycon
-  )
-endif()
-
-### SYSTEM DEPENDENCIES ###
 find_package(OpenCV REQUIRED)
-find_package(Boost COMPONENTS program_options thread system REQUIRED)
 
-### TARGETS ###
-include_directories(
-  ${catkin_INCLUDE_DIRS} include
-)
+generate_dynamic_reconfigure_options(cfg/whycon.cfg)
 
-add_library(whycon SHARED src/lib/circle_detector.cpp src/lib/many_circle_detector.cpp src/lib/localization_system.cpp)
-target_link_libraries(whycon ${OpenCV_LIBS} ${Boost_LIBRARIES})
+set(CMAKE_CXX_FLAGS "-std=c++11 -O2 -march=native -ggdb")
 
-if(NOT DISABLE_ROS)
-  add_executable(whycon-node src/ros/whycon_node.cpp src/ros/whycon_ros.cpp)
-  set_target_properties(whycon-node PROPERTIES OUTPUT_NAME whycon)
+## Uncomment this if the package has a setup.py. This macro ensures
+## modules and global scripts declared therein get installed
+## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
+# catkin_python_setup()
 
-  add_executable(set_axis src/ros/set_axis_node.cpp src/ros/set_axis.cpp)
-  add_executable(triangulator src/ros/triangulator_node.cpp src/ros/triangulator.cpp)
-  add_executable(robot_pose_publisher src/ros/robot_pose_publisher.cpp src/ros/robot_pose_publisher_node.cpp)
+#######################################
+## Declare ROS messages and services ##
+#######################################
 
-  add_dependencies(whycon-node whycon_generate_messages_cpp)
-  add_dependencies(set_axis whycon_generate_messages_cpp)
-  add_dependencies(triangulator whycon_generate_messages_cpp)
-  add_dependencies(robot_pose_publisher whycon_generate_messages_cpp)
+## Generate messages in the 'msg' folder
+add_message_files(DIRECTORY msg
+    FILES
+    Marker.msg
+    MarkerArray.msg
+    )
 
-  target_link_libraries(whycon-node ${catkin_LIBRARIES} whycon)
-  target_link_libraries(set_axis ${catkin_LIBRARIES} whycon)
-  target_link_libraries(triangulator ${catkin_LIBRARIES} whycon)
-  target_link_libraries(robot_pose_publisher ${catkin_LIBRARIES} whycon)
-else()
-  add_executable(whycon-main src/main.cpp)
-  set_target_properties(whycon-main PROPERTIES OUTPUT_NAME whycon)
-  target_link_libraries(whycon-main whycon)
+# Generate services in the 'srv' folder
+# add_service_files(
+#  FILES
+# Charging.srv
+#)
 
-  add_executable(camera-calibrator src/camera_calibrator.cpp)
-  target_link_libraries(camera-calibrator ${OpenCV_LIBS})
-endif()
+## Generate added messages and services with any dependencies listed here
+generate_messages(
+    DEPENDENCIES
+    std_msgs 
+    geometry_msgs 
+    )
 
-### INSTALL ###
+###################################
+## catkin specific configuration ##
+###################################
+## The catkin_package macro generates cmake config files for your package
+## Declare things to be passed to dependent projects
+## LIBRARIES: libraries you create in this project that dependent projects also need
+## CATKIN_DEPENDS: catkin_packages dependent projects also need
+## DEPENDS: system dependencies of this project that dependent projects also need
+catkin_package(
+    #  INCLUDE_DIRS include
+    #  LIBRARIES charging
+    #  CATKIN_DEPENDS image_transport roscpp rospy std_msgs
+    CATKIN_DEPENDS message_runtime std_msgs geometry_msgs dynamic_reconfigure
+    #  DEPENDS system_lib
+    )
 
-### Mark cpp header files for installation
-if(NOT DISABLE_ROS)
-  install(DIRECTORY include/${PACKAGE_NAME}
-    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  )
-  ## Mark executables and/or libraries for installation
-  install(TARGETS whycon whycon-node triangulator robot_pose_publisher
+###########
+## Build ##
+###########
+
+include_directories(include
+    ${catkin_INCLUDE_DIRS}
+    )
+
+add_library(whycon_detector src/CCircleDetect.cpp)
+add_library(whycon_image src/CRawImage.cpp)
+add_library(whycon_timer src/CTimer.cpp)
+add_library(whycon_sysmath src/sysmat.cpp)
+add_library(whycon_transform src/CTransformation.cpp)
+add_library(whycon_necklace src/CNecklace.cpp)
+add_library(whycon_gui src/CGui.cpp)
+
+target_link_libraries(whycon_detector whycon_image)
+
+target_link_libraries(whycon_transform
+    whycon_sysmath
+    ${catkin_LIBRARIES}
+    ${OpenCV_LIBRARIES}
+    )
+
+target_link_libraries(whycon_necklace
+    whycon_detector
+    whycon_transform
+    whycon_image
+    )
+
+target_link_libraries(whycon_gui
+    whycon_image
+    whycon_transform
+    SDL
+    SDL_ttf
+    )
+
+add_executable(whycon_ros src/CWhycon.cpp)
+
+add_dependencies(whycon_ros
+    ${catkin_EXPORTED_TARGETS}
+    ${${PROJECT_NAME}_EXPORTED_TARGETS}
+    ${PROJECT_NAME}_gencfg
+    )
+
+target_link_libraries(whycon_ros
+    whycon_timer
+    whycon_image
+    whycon_detector
+    whycon_transform
+    whycon_gui
+    whycon_necklace
+    SDL
+    ${catkin_LIBRARIES}
+    ${OpenCV_LIBRARIES}
+    )
+
+#############
+## Install ##
+#############
+
+install(TARGETS
+    whycon_detector
+    whycon_image
+    whycon_timer
+    whycon_sysmath
+    whycon_transform
+    whycon_necklace
+    whycon_gui
+    whycon_ros
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-  )
-else()
-  install(TARGETS whycon DESTINATION lib)
-  install(TARGETS whycon-main camera-calibrator DESTINATION bin)
-  install(DIRECTORY include/whycon DESTINATION include)
-  install(FILES cmake-configs/FindWhyCon.cmake DESTINATION share/cmake/Modules)
-endif()
+    )
+
+install(DIRECTORY include/${PROJECT_NAME}/
+    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+    FILES_MATCHING PATTERN "*.h"
+    )
+
+install(DIRECTORY launch/
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+    )
+
+install(DIRECTORY etc/
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/etc
+    )
+
+install(DIRECTORY id/
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/id
+    )
+
+#############
+## Testing ##
+#############
+
+## Add gtest based cpp test target and link libraries
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_charging.cpp)
+# if(TARGET ${PROJECT_NAME}-test)
+#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
+# endif()
+
+## Add folders to be run by python nosetests
+# catkin_add_nosetests(test)
+
