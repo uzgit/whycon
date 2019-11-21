@@ -2,8 +2,8 @@
 Changelog for package whycon
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.4 (2019-11-21)
+------------------
 * fixed dependencies
 * added id generator
 * imported snapcart version
