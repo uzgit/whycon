@@ -2,8 +2,8 @@
 Changelog for package whycon_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.3.0 (2019-11-22)
+------------------
 * 0.2.4
 * changelog
 * fixed dependencies
