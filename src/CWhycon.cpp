@@ -285,7 +285,10 @@ void CWhycon::imageCallback(const sensor_msgs::ImageConstPtr& msg){
 
     // publishing information about tags 
     whycon_ros::MarkerArray markerArray;
-
+    
+    // Whycon_marker should have the same header as the image received
+    markerArray.header = msg->header;
+    
     visualization_msgs::MarkerArray visualArray;
 
     for (int i = 0; i < numMarkers; i++){
