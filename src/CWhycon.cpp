@@ -309,55 +309,114 @@ void CWhycon::imageCallback(const sensor_msgs::ImageConstPtr& msg){
             Mat descriptor = cv::Mat(cv::Size(1,4), CV_64FC1,data);
             
 
-            // Convert YPR to Quaternion
-            /*tf::Quaternion q;
-            q.setRPY(objectArray[i].roll, objectArray[i].pitch, objectArray[i].yaw);
-            marker.position.orientation.x = q.getX();
-            marker.position.orientation.y = q.getY();
-            marker.position.orientation.z = q.getZ();
-            marker.position.orientation.w = q.getW();*/
-
+            // the "roll, pitch, yaw" vector (in rotation), basically this is the normal of the marker in image coords
+            // as currently reported in "rotation" field
             tf::Vector3 axis_vector(objectArray[i].pitch, objectArray[i].roll, objectArray[i].yaw);
+
+            //the "up vector" (pointing out of the camera, this is the reference the orientation is based on)
             tf::Vector3 up_vector(0.0, 0.0, 1.0);
-            tf::Vector3 right_vector = axis_vector.cross(up_vector);
-            right_vector.normalized();
-            tf::Quaternion quat(right_vector, -1.0*acos(axis_vector.dot(up_vector)));
-            quat.normalize();
-            geometry_msgs::Quaternion marker_orientation;
-            tf::quaternionTFToMsg(quat, marker_orientation);
 
-            marker.position.orientation = marker_orientation;
+            // the position of the marker (normalised to unit length)
+            tf::Vector3 marker_pos(marker.position.position.x,marker.position.position.y,marker.position.position.z);
+            marker_pos.normalize();
 
-            // Euler angles
-            marker.rotation.x = objectArray[i].pitch;
-            marker.rotation.y = objectArray[i].roll;
-            marker.rotation.z = objectArray[i].yaw;
+            // the assumption now is that the angle between the marker's position vector (pos) and the
+            // normal of the marker (v2, here) always has to be an acute angle (<90), 
+            // if it is not, the normal is pointing away from us and we see the "wrong side"
+            // consequently, if pos * v2 > 0 we have an acute angle and the quaternion is fine
+            // otherwise in pos * v2 < 0, it needs to be flipped, easiest is to just flip v2 and then compute the quaternion
+            bool current_marker_is_acute;
+            if (marker_pos.dot(axis_vector) > 0) current_marker_is_acute = true;
+            else current_marker_is_acute = false;
 
-            markerArray.markers.push_back(marker);
 
-            // Generate RVIZ marker for visualisation
-            visualization_msgs::Marker visualMarker;
-            visualMarker.header = msg->header;
-            // visualMarker.header.stamp = ros::Time();
-            visualMarker.ns = "whycon";
-            visualMarker.id = (identify) ? marker.id : i;
-            visualMarker.type = visualization_msgs::Marker::SPHERE;
-            visualMarker.action = visualization_msgs::Marker::MODIFY;
-            visualMarker.pose = marker.position;
-            visualMarker.scale.x = circleDiameter;  // meters
-            visualMarker.scale.y = circleDiameter;
-            visualMarker.scale.z = 0.01;
-            visualMarker.color.r = 0.0;
-            visualMarker.color.g = 1.0;
-            visualMarker.color.b = 0.0;
-            visualMarker.color.a = 1.0;
-            visualMarker.lifetime = ros::Duration(0.2);  // sec
-            visualArray.markers.push_back(visualMarker);
+            // only put in the array the whycon detections that meet the filter criterions specified
+            if (useAcuteFilter){
+                if (current_marker_is_acute) {
+                    if (sqrt(marker.position.position.x*marker.position.position.x + marker.position.position.z*marker.position.position.z) < maxDetectionDistance){
+                        // taken from inspired by https://stackoverflow.com/a/11741520. transfrom 
+                        // get the quaternion between the up_vector and the reported
+                        tf::Vector3 right_vector = axis_vector.cross(up_vector);
+                        right_vector.normalized();
+                        tf::Quaternion quat(right_vector, -1.0*acos(axis_vector.dot(up_vector)));
+                        quat.normalize();
+                        geometry_msgs::Quaternion marker_orientation;
+                        tf::quaternionTFToMsg(quat, marker_orientation);
+
+                        marker.position.orientation = marker_orientation;
+
+                        // Euler angles
+                        marker.rotation.x = objectArray[i].pitch;
+                        marker.rotation.y = objectArray[i].roll;
+                        marker.rotation.z = objectArray[i].yaw;
+
+                        // Generate RVIZ marker for visualisation
+                        visualization_msgs::Marker visualMarker;
+                        visualMarker.header = msg->header;
+                        // visualMarker.header.stamp = ros::Time();
+                        visualMarker.ns = "whycon";
+                        visualMarker.id = (identify) ? marker.id : i;
+                        visualMarker.type = visualization_msgs::Marker::SPHERE;
+                        visualMarker.action = visualization_msgs::Marker::MODIFY;
+                        visualMarker.pose = marker.position;
+                        visualMarker.scale.x = circleDiameter;  // meters
+                        visualMarker.scale.y = circleDiameter;
+                        visualMarker.scale.z = 0.01;
+                        visualMarker.color.r = 0.0;
+                        visualMarker.color.g = 1.0;
+                        visualMarker.color.b = 0.0;
+                        visualMarker.color.a = 1.0;
+                        visualMarker.lifetime = ros::Duration(0.2);  // sec
+                        markerArray.markers.push_back(marker);
+                        visualArray.markers.push_back(visualMarker);
+                    }
+                }
+            }
+            else{
+                if (sqrt(marker.position.position.x*marker.position.position.x + marker.position.position.z*marker.position.position.z) < maxDetectionDistance){
+                    // taken from inspired by https://stackoverflow.com/a/11741520. transfrom 
+                    // get the quaternion between the up_vector and the reported
+                    tf::Vector3 right_vector = axis_vector.cross(up_vector);
+                    right_vector.normalized();
+                    tf::Quaternion quat(right_vector, -1.0*acos(axis_vector.dot(up_vector)));
+                    quat.normalize();
+                    geometry_msgs::Quaternion marker_orientation;
+                    tf::quaternionTFToMsg(quat, marker_orientation);
+
+                    marker.position.orientation = marker_orientation;
+
+                    // Euler angles
+                    marker.rotation.x = objectArray[i].pitch;
+                    marker.rotation.y = objectArray[i].roll;
+                    marker.rotation.z = objectArray[i].yaw;
+
+                    // Generate RVIZ marker for visualisation
+                    visualization_msgs::Marker visualMarker;
+                    visualMarker.header = msg->header;
+                    // visualMarker.header.stamp = ros::Time();
+                    visualMarker.ns = "whycon";
+                    visualMarker.id = (identify) ? marker.id : i;
+                    visualMarker.type = visualization_msgs::Marker::SPHERE;
+                    visualMarker.action = visualization_msgs::Marker::MODIFY;
+                    visualMarker.pose = marker.position;
+                    visualMarker.scale.x = circleDiameter;  // meters
+                    visualMarker.scale.y = circleDiameter;
+                    visualMarker.scale.z = 0.01;
+                    visualMarker.color.r = 0.0;
+                    visualMarker.color.g = 1.0;
+                    visualMarker.color.b = 0.0;
+                    visualMarker.color.a = 1.0;
+                    visualMarker.lifetime = ros::Duration(0.2);  // sec
+                    markerArray.markers.push_back(marker);
+                    visualArray.markers.push_back(visualMarker);
+                }
+            }
+
         }
     }
 
-    //printf("markers %lu visual %lu\n", markerArray.markers.size(), visualArray.markers.size());
-    if(markerArray.markers.size() > 0){
+    // only publish if there a certain amount of markers detected that meet the conditions
+    if(markerArray.markers.size() >= minDetectionsToPublish){
         markers_pub.publish(markerArray);
         visual_pub.publish(visualArray);
     }
@@ -466,6 +525,10 @@ CWhycon::CWhycon(){
     lastTransformType = TRANSFORM_2D;
     wasMarkers = 1;
 
+    useAcuteFilter = true;
+    maxDetectionDistance = 6;
+    minDetectionsToPublish = 2;
+
 }
 
 void CWhycon::init(char *fPath, char *calPath){
@@ -481,6 +544,9 @@ void CWhycon::init(char *fPath, char *calPath){
     n->param("idSamples", idSamples, 360);
     n->param("hammingDist", hammingDist, 1);
     n->param("maxMarkers", maxMarkers, 100);
+    n->param("useAcuteFilter", useAcuteFilter, true); //only whycons within an acute angle repect the camera will be published
+    n->param("maxDetectionDistance",maxDetectionDistance,6); // whycon futher away than this distance won't be published
+    n->param("minDetectionsToPublish", minDetectionsToPublish, 2); //minimum amount of detected fiducial before start publishing
 
     moveOne = moveVal;
     moveOne  = 0;

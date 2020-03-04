@@ -60,6 +60,11 @@ class CWhycon {
         int moveVal;        // how many frames to process ?
         int moveOne;        // how many frames to process now (setting moveOne to 0 or lower freezes the video stream)
 
+        // filtering parameters
+        bool useAcuteFilter;
+        int maxDetectionDistance;
+        int minDetectionsToPublish;
+
         CWhycon();      // constructor sets up essential variables
         ~CWhycon();     // destructor
         void init(char *fPath, char *calPath);      // creates nessesary objects and segment detectors
