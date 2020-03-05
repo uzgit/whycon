@@ -525,9 +525,9 @@ CWhycon::CWhycon(){
     lastTransformType = TRANSFORM_2D;
     wasMarkers = 1;
 
-    useAcuteFilter = true;
-    maxDetectionDistance = 6;
-    minDetectionsToPublish = 2;
+    useAcuteFilter = false;
+    maxDetectionDistance = 100;
+    minDetectionsToPublish = 1;
 
 }
 
@@ -544,9 +544,9 @@ void CWhycon::init(char *fPath, char *calPath){
     n->param("idSamples", idSamples, 360);
     n->param("hammingDist", hammingDist, 1);
     n->param("maxMarkers", maxMarkers, 100);
-    n->param("useAcuteFilter", useAcuteFilter, true); //only whycons within an acute angle repect the camera will be published
-    n->param("maxDetectionDistance",maxDetectionDistance,6); // whycon futher away than this distance won't be published
-    n->param("minDetectionsToPublish", minDetectionsToPublish, 2); //minimum amount of detected fiducial before start publishing
+    n->param("useAcuteFilter", useAcuteFilter, false); //only whycons within an acute angle repect the camera will be published
+    n->param("maxDetectionDistance",maxDetectionDistance,100); // whycon futher away than this distance won't be published
+    n->param("minDetectionsToPublish", minDetectionsToPublish, 1); //minimum amount of detected fiducial before start publishing
 
     moveOne = moveVal;
     moveOne  = 0;
