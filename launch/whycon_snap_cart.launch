@@ -1,3 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+    
     <arg name="camera_frame" default="realsense_optical" />
     <arg name="camRaw" default="/realsense_rgb/image_raw" doc="image_raw topic"/>
     <arg name="camInfo" default="/realsense_rgb/camera_info" doc="camera_info topic"/>
@@ -27,3 +30,6 @@
       <param name="maxDetectionDistance" value="$(arg maxDetectionDistance)"/>
       <param name="minDetectionsToPublish" value="$(arg minDetectionsToPublish)"/>
     </node>
+    
+</launch>
+
