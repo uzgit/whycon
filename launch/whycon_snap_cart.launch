@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <launch>
     
-    <arg name="camera_frame" default="realsense_optical" />
-    <arg name="camRaw" default="/realsense_rgb/image_raw" doc="image_raw topic"/>
-    <arg name="camInfo" default="/realsense_rgb/camera_info" doc="camera_info topic"/>
+    <arg name="camera_frame" default="camera_color_optical_frame" />
+    <arg name="camRaw" default="/camera/color/image_rect_color" doc="image_raw topic"/>
+    <arg name="camInfo" default="/camera/color/camera_info" doc="camera_info topic"/>
     
     <arg name="idBits" default="5" doc="Number of encoded bits"/>
     <arg name="idSamples" default="360" doc="Number of samples to detect ID"/>
