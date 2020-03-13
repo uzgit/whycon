@@ -1,15 +1,19 @@
 <?xml version="1.0"?>
 <launch>
+    <!-- parameters to change -->
+    <arg name="circleDiameter" default="15" doc="Diameter of the black circle"/>
+    <arg name="idBits" default="6" doc="Number of encoded bits"/>
+    <arg name="useGui" default="true" doc="Whether to use GUI"/>
+    <arg name="numMarkers" value="10"/>
+
+    <!-- DO NOT TOUCH UNLESS YOU KNOW WHAT YOU ARE DOING -->
     
     <arg name="camera_frame" default="camera_color_optical_frame" />
     <arg name="camRaw" default="/camera/color/image_rect_color" doc="image_raw topic"/>
     <arg name="camInfo" default="/camera/color/camera_info" doc="camera_info topic"/>
-    
-    <arg name="idBits" default="5" doc="Number of encoded bits"/>
     <arg name="idSamples" default="360" doc="Number of samples to detect ID"/>
     <arg name="hammingDist" default="1" doc="Hamming distance used for ID"/>
     <arg name="maxMarkers" default="10" doc="Maximum possible amount of markers to be tracked"/>
-    <arg name="useGui" default="true" doc="Whether to use GUI"/>
     <arg name="useAcuteFilter" default="true" doc="only whycons within an acute angle repect the camera will be published"/>
     <arg name="maxDetectionDistance" default="6" doc=" whycon futher away than this distance won't be published"/>s
     <arg name="minDetectionsToPublish" default="2" doc="minimum amount of detected fiducial before start publishing"/>
@@ -19,8 +23,8 @@
     <node pkg="whycon_ros" type="whycon_ros" name="whycon_ros" respawn="true" output="screen" args="$(arg fontPath) $(arg calibDefPath)" launch-prefix="">
       <remap from="/camera/camera_info" to="$(arg camInfo)"/>
       <remap from="/camera/image_raw" to="$(arg camRaw)"/>
-      <param name="circleDiameter" value="40"/>
-      <param name="numMarkers" value="28"/>
+      <param name="circleDiameter" value="$(arg circleDiameter)"/>
+      <param name="numMarkers" value="$(arg numMarkers)"/>
       <param name="useGui" value="$(arg useGui)"/>
       <param name="idBits" value="$(arg idBits)"/>
       <param name="idSamples" value="$(arg idSamples)"/>
