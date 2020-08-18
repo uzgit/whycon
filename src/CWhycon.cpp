@@ -303,6 +303,18 @@ void CWhycon::imageCallback(const sensor_msgs::ImageConstPtr& msg){
             marker.position.position.x = -objectArray[i].y;
             marker.position.position.y = -objectArray[i].z;
             marker.position.position.z = objectArray[i].x;
+	    marker.u = currentSegmentArray[i].x;
+	    marker.v = currentSegmentArray[i].y;
+
+	    marker.theta = atan2((currInnerSegArray[i].y - currentSegmentArray[i].y ), ( currInnerSegArray[i].x - currentSegmentArray[i].x ));
+	    if( marker.theta > M_PI_2 )
+	    {
+		    marker.theta -= 3 * M_PI_2;
+	    }
+	    else
+	    {
+		    marker.theta += M_PI_2;
+	    }
 
             //double data[4] = {marker.id*100,marker.position.position.x,marker.position.position.y,marker.position.position.z}; //TODO
             double data[4] = {marker.id*10000,objectArray[i].x,objectArray[i].y,objectArray[i].z}; //TODO
@@ -410,9 +422,8 @@ void CWhycon::imageCallback(const sensor_msgs::ImageConstPtr& msg){
                     markerArray.markers.push_back(marker);
                     visualArray.markers.push_back(visualMarker);
                 }
-            }
-
-        }
+	    }
+	}
     }
 
     // only publish if there a certain amount of markers detected that meet the conditions
@@ -421,6 +432,9 @@ void CWhycon::imageCallback(const sensor_msgs::ImageConstPtr& msg){
         visual_pub.publish(visualArray);
     }
 
+
+
+    
     //draw stuff on the GUI 
     if (useGui){
         gui->drawImage(image);

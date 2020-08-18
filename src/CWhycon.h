@@ -10,6 +10,8 @@
 #include <opencv2/opencv.hpp>
 #include <SDL/SDL.h>
 
+#include <math.h>
+
 // WhyCon libs
 #include "CGui.h"
 #include "CTimer.h"
