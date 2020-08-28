@@ -305,7 +305,7 @@ void CWhycon::imageCallback(const sensor_msgs::ImageConstPtr& msg){
             marker.position.position.z = objectArray[i].x;
 	    marker.u = currentSegmentArray[i].x;
 	    marker.v = currentSegmentArray[i].y;
-
+	    
 	    marker.theta = atan2((currInnerSegArray[i].y - currentSegmentArray[i].y ), ( currInnerSegArray[i].x - currentSegmentArray[i].x ));
 	    if( marker.theta > M_PI_2 )
 	    {
@@ -315,8 +315,8 @@ void CWhycon::imageCallback(const sensor_msgs::ImageConstPtr& msg){
 	    {
 		    marker.theta += M_PI_2;
 	    }
-
-            //double data[4] = {marker.id*100,marker.position.position.x,marker.position.position.y,marker.position.position.z}; //TODO
+            
+	    //double data[4] = {marker.id*100,marker.position.position.x,marker.position.position.y,marker.position.position.z}; //TODO
             double data[4] = {marker.id*10000,objectArray[i].x,objectArray[i].y,objectArray[i].z}; //TODO
             Mat descriptor = cv::Mat(cv::Size(1,4), CV_64FC1,data);
             
