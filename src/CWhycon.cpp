@@ -505,7 +505,8 @@ CWhycon::~CWhycon(){
 CWhycon::CWhycon(){
     imageWidth = 640;
     imageHeight = 480;
-    circleDiameter = 0.122;
+//    circleDiameter = 0.122;
+    circleDiameter = 0.75;
     fieldLength = 1.00;
     fieldWidth = 1.00;
 
