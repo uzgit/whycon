@@ -8,8 +8,11 @@ all: whycon_id_gen
 whycon_id_gen: whycon_id_gen.cpp CNecklace.cpp
 	$(CXX) whycon_id_gen.cpp $(CFLAGS) $(LDFLAGS) -o $@ 
 
+whycode_unique_generator: whycode_unique_generator.cpp CNecklace.cpp
+	$(CXX) whycode_unique_generator.cpp $(CFLAGS) $(LDFLAGS) -o $@ 
+
 clean:
-	rm -f *.o whycon_id_gen
+	rm -f *.o whycon_id_gen whycode_unique_generator
 
 .PHONY: clean
 

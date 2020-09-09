@@ -112,6 +112,15 @@ add_dependencies(whycon_id_generator
     ${${PROJECT_NAME}_EXPORTED_TARGETS}
     )
 
+add_executable(whycode_unique_generator 
+    id/CNecklace.cpp
+    id/whycode_unique_generator.cpp)
+add_dependencies(whycode_unique_generator
+    ${catkin_EXPORTED_TARGETS}
+    ${${PROJECT_NAME}_EXPORTED_TARGETS}
+    )
+
+
 target_link_libraries(whycon_id_generator
     ${Magick_LIBRARIES}
 )
@@ -124,6 +133,10 @@ add_dependencies(whycon_ros
     ${${PROJECT_NAME}_EXPORTED_TARGETS}
     ${PROJECT_NAME}_gencfg
     )
+
+target_link_libraries(whycode_unique_generator
+    ${Magick_LIBRARIES}
+)
 
 target_link_libraries(whycon_ros
     whycon_timer
