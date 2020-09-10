@@ -12,8 +12,8 @@ CNecklace::CNecklace(int bits, int samples, int minimalHamming)
     int minHam = 1000;
     int hamindex = 1000;
     int ham = 1000;
-    debug = false;
-    debugSegment = false;
+    debug = true;
+    debugSegment = true;
 
     /*for every possible id*/
     for (int id = 0;id<idLength;id++){
